@@ -1,6 +1,15 @@
-% ==============================
-% configuracoes problema
-% ------------------------------
+/*
+ROBÔ DE LIMPEZA
+
+A sala é um tabuleiro com origem no canto superior esquerdo.
+Os numeros de posicao iniciam em 1, o canto superior esquerdo é pos(1,1)).
+*/
+
+/*
+==============================
+configuracoes problema
+------------------------------
+*/
 % tamanhoSala(+IdSala, +Largura, +Altura)
 tamanhoSala(1, 5, 5).
 
@@ -11,7 +20,7 @@ obstaculo(1, pos(2,2)).
 sujeira(1, pos(3,3)).
 
 %posicaoEntrada(+IdSala, +Posicao)
-posicaoEntrada(1, pos(0, 0)).
+posicaoEntrada(1, pos(1, 1)).
 
 % posicaoSaida(+IdSala, +Posicao)
 posicaoSaida(1, pos(4, 4)).
@@ -136,8 +145,8 @@ concatena/3
 ordenaF/2
 objetivo/1
 */
-aEstrela([[G, _, _, No|Caminho]|_], Solucao, G):-
-	objetivo(No),
+aEstrela([[G, _, _, No|Caminho]|_], Solucao, G) :-
+	objetivo([No|Caminho]),
 	reverse([No|Caminho], Solucao).
 aEstrela([Caminho|Caminhos], Solucao, G) :-
 	estendeF(Caminho, NovosCaminhos),
@@ -270,6 +279,8 @@ proximoQuadrado(PosAtual, PosNova) :-
 	% nova posicao é valida
 	dentroSala(PosNova),
 	% nova posicao não tem obstáculo
+% REVIEW - \+obstaculo; \+(obstaculo); \+ obstaculo;
+% REVIEW - todos passaram a funcionar depois de executar not(obstaculo)
 	\+obstaculo(PosNova).
 	% % nova posicao tem sujeira
 	% sujeira(PosNova),
@@ -313,9 +324,9 @@ dentroSala(pos(X,Y)) :-
 	use(sala, IdSala),
 	tamanhoSala(IdSala, Larg, Alt),
 	0 < X,
-	X >= Larg,
+	X =< Larg,
 	0 < Y,
-	Y >= Alt.
+	Y =< Alt.
 
 % obstaculo(+PosicaoQualquer)
 obstaculo(Pos) :-
