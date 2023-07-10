@@ -1,8 +1,44 @@
+% ==============================
+% configuracoes problema
+% ------------------------------
+% tamanhoSala(+IdSala, +Largura, +Altura)
+tamanhoSala(1, 5, 5).
+
+% obstaculo(+IdSala, +PosObstaculo)
+obstaculo(1, pos(2,2)).
+
+% sujeira(+IdSala, +PosSujeira)
+sujeira(1, pos(3,3)).
+
+%posicaoEntrada(+IdSala, +Posicao)
+posicaoEntrada(1, pos(0, 0)).
+
+% posicaoSaida(+IdSala, +Posicao)
+posicaoSaida(1, pos(4, 4)).
+
+% resolveProblema(-Solucao, -Custo)
+resolveProblema(Solucao, Custo) :-
+	use(sala, IdSala),
+	posicaoEntrada(IdSala, PosEntrada),
+	limparSala(PosEntrada, Solucao, Custo).
+
+% limparSala(+PosInicial, +PosFinal, -Solucao, -Custo)
+limparSala(PosInicial, Solucao, Custo) :-
+	use(busca, B),
+	% use(concatena, C),
+	% use(ordena, O),
+	% use(sala, IdSala),
+	% mapaSala(IdSala, S),
+	busca(B, PosInicial, Solucao, Custo).
+
+% ==============================
+% definicoes
+% ------------------------------
 % escolhe o algoritmo de busca a ser usado
-use(busca, hillclimb).
+%use(busca, hillclimb).
 %use(busca, bestFirst).
 %use(busca, branchAndBound).
-%use(busca, aEstrela).
+use(busca, aEstrela).
 
 % escolher o algoritmo de concatenacao a ser usado
 use(concatena, builtin).
@@ -12,51 +48,27 @@ use(concatena, builtin).
 use(ordena, builtin).
 %use(ordena, customizado).
 
+% escolher o calculo de distancia a ser usado
+use(distancia, manhattan).
+%use(distancia, diagHorVert).
+%use(distancia, euclidiana).
+
 % escolher o id da sala para resolver o problema
 % use(sala, +IdSala)
 use(sala, 1).
 
-% tamanhoSala(+IdSala, +Largura, +Altura)
-tamanhoSala(1, 5, 5).
-
-% obstaculo(+IdSala, +PosObstaculo)
-obstaculo(1, pos()).
-
-% sujeira(+IdSala, +PosSujeira)
-sujeira(1, pos()).
-
-%posicaoEntrada(+IdSala, +Posicao)
-posicaoEntrada(1, pos(0, 0)).
-
-% posicaoSaida(+IdSala, +Posicao)
-posicaoSaida(1, pos(4, 4)).
-
-resolveProblema(Solucao) :-
-	use(sala, IdSala),
-	posicaoEntrada(IdSala, PosEntrada),
-	posicaoSaida(IdSala, PosSaida),
-	limparSala(PosEntrada, PosSaida, Solucao).
-
-limparSala(PosInicial, PosFinal, Solucao) :-
-	use(busca, B),
-	% use(concatena, C),
-	% use(ordena, O),
-	% use(sala, IdSala),
-	% mapaSala(IdSala, S),
-	busca(B, PosInicial, PosFinal, Solucao).
-
-busca(hillClimb, PosInicial, PosFinal, Custo) :-
-	hillClimb([[PosInicial]], Solucao, Custo).
-busca(bestFirst, PosInicial, PosFinal, Custo) :-
-	bestFirst([[PosInicial]], Solucao, Custo).
-busca(branchAndBound, PosInicial, PosFinal, Custo) :-
-	branchAndBound([[PosInicial]], Solucao, Custo).
-busca(aEstrela,  PosInicial, PosFinal, Custo) :-
-	aEstrela([[PosInicial]], Solucao, Custo).
-
 % ==============================
-% heuristica custo e avaliacao
+% buscas
 % ------------------------------
+busca(hillClimb, PosInicial, Solucao, Custo) :-
+	hillClimb([[0,PosInicial]], Solucao, Custo).
+busca(bestFirst, PosInicial, Solucao, Custo) :-
+	bestFirst([[0,PosInicial]], Solucao, Custo).
+busca(branchAndBound, PosInicial, Solucao, Custo) :-
+	branchAndBound([[0,PosInicial]], Solucao, Custo).
+busca(aEstrela,  PosInicial, Solucao, Custo) :-
+	aEstrela([[0,0,0,PosInicial]], Solucao, Custo).
+
 /*
 LOGICA:
 verifica > estende (avaliacao) > ordena (extensao) > concatena (prepende extensao)> repete
@@ -134,6 +146,20 @@ aEstrela([Caminho|Caminhos], Solucao, G) :-
 	aEstrela(CaminhosTotOrd, Solucao, G).
 
 % ==============================
+%
+% ------------------------------
+objetivo([PosAtual|PosPassadas]):-
+	use(sala, IdSala),
+	findall(Pos, sujeira(IdSala, Pos), Sujeiras),
+	subconjunto(Sujeiras, PosPassadas),
+	posicaoSaida(IdSala, PosAtual).
+
+subconjunto([], [_|_]).
+subconjunto([H1|T1], L2) :-
+	memberchk(H1, L2),
+	subconjunto(T1, L2).
+
+% ==============================
 % extensores
 % ------------------------------
 %estendeF([_, GC, _, No|Caminho], NovosCaminhos):-
@@ -146,15 +172,30 @@ aEstrela([Caminho|Caminhos], Solucao, G) :-
 %			FNovo is GNovo + HNovo
 %		),
 %		NovosCaminhos).
-estendeF([_, GC, _, No|Caminho], NovosCaminhos):-
+
+%estendeG([G, No|Caminho], NovosCaminhos) :-
+%	findall([GNovo, NovoNo, No|Caminho],
+%		(
+%			sG(GN, No, NovoNo),
+%			not(member(NovoNo, [No|Caminho])),
+%			GNovo is GN + G),
+%		NovosCaminhos).
+
+%estendeH([_, No|Caminho], NovosCaminhos) :-
+%	findall([HNovo, NovoNo, No|Caminho],
+%		(
+%			sH(HN, No, NovoNo),
+%			not(member(NovoNo, [No|Caminho])),
+%			HNovo is HN),
+%		NovosCaminhos).
+
+estendeF([_, G, _, No|Caminho], NovosCaminhos) :-
 	findall([FNovo, GNovo, HNovo, NovoNo, No|Caminho],
 		(
-			proximoQuadrado(PosAtual, [No|Caminho], PosNova),
-			% calcula custo corrente
-			GNovo is GC + GN,
-			% estima custo restante
-			HNovo is HN,
-			%
+			heuristica(No, [No|Caminho], NovoNo, DeltaG, HNovo),
+			% calcula custo
+			GNovo is G + DeltaG,
+			% estimativa total
 			FNovo is GNovo + HNovo
 		),
 		NovosCaminhos).
@@ -162,17 +203,17 @@ estendeF([_, GC, _, No|Caminho], NovosCaminhos):-
 estendeG([G, No|Caminho], NovosCaminhos) :-
 	findall([GNovo, NovoNo, No|Caminho],
 		(
-			sG(GN, No, NovoNo),
-			not(member(NovoNo, [No|Caminho])),
-			GNovo is GN + G),
+			heuristica(No, [No|Caminho], NovoNo, DeltaG, _),
+			% calcula custo
+			GNovo is G + DeltaG
+		),
 		NovosCaminhos).
 
 estendeH([_, No|Caminho], NovosCaminhos) :-
 	findall([HNovo, NovoNo, No|Caminho],
 		(
-			sH(HN, No, NovoNo),
-			not(member(NovoNo, [No|Caminho])),
-			HNovo is HN),
+			heuristica(No, [No|Caminho], NovoNo, _, HNovo)
+		),
 		NovosCaminhos).
 % ----------
 
@@ -215,19 +256,27 @@ maiorF([F1|_], [F2|_]):-
 % ==============================
 %
 % ------------------------------
+% heuristica
+heuristica(PosAtual, Caminho, PosNova, DeltaG, H) :-
+	proximoQuadrado(PosAtual, PosNova),
+	maximoOcorrencias(PosNova, Caminho, 2),
+	custoDeslocamento(PosAtual, PosNova, DeltaG),
+	avaliaRestante(PosAtual, PosNova, H).
+
 % proximoQuadrado(+PosAtual, +Caminho, -PosNova)
-proximoQuadrado(PosAtual, Caminho, PosNova) :-
+proximoQuadrado(PosAtual, PosNova) :-
 	% posicao ao lado da atual
 	posicaoVizinha(PosAtual, PosNova),
 	% nova posicao é valida
 	dentroSala(PosNova),
 	% nova posicao não tem obstáculo
-	\obstaculo(PosNova),
+	\+obstaculo(PosNova).
 	% % nova posicao tem sujeira
 	% sujeira(PosNova),
+	% verifica que a PosNova foi visitada no maximo uma vez
+	%maxOcorrencias(PosNova, Caminho, Oc),
 	% visitado no maximo 1 vez
-	ocorrencias(PosNova, Caminho, Oc),
-	2 >= Oc.
+	%2 >= Oc.
 
 % posicaoVizinha(+PosAtual, -PosVizinha)
 % acima
@@ -252,7 +301,7 @@ posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
 	NovoY is Y+1,
 	NovoX is X-1.
 % esquerda
-posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
+posicaoVizinha(pos(X,Y), pos(NovoX, Y)) :-
 	NovoX is X-1.
 % acima esquerda
 posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
@@ -261,22 +310,62 @@ posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
 
 % dentroSala(+PosicaoQualquer)
 dentroSala(pos(X,Y)) :-
-	tamanhoSala(Larg, Alt),
+	use(sala, IdSala),
+	tamanhoSala(IdSala, Larg, Alt),
 	0 < X,
 	X >= Larg,
 	0 < Y,
 	Y >= Alt.
 
-% ocorrencias(+Elemento, +Lista, -NumOcorrencias)
-ocorrencias(_, [], 0) :- !.
-ocorrencias(Elem, [Elem| Cauda], N) :-
-	!,
-	ocorrencias(Elem, Cauda, _n),
-	N is _n+1.
-ocorrencias(Elem, [NotElem| Cauda], N) :-
+% obstaculo(+PosicaoQualquer)
+obstaculo(Pos) :-
+	use(sala, IdSala),
+	obstaculo(IdSala, Pos).
+
+%% ocorrencias(+Elemento, +Lista, -NumOcorrencias)
+%ocorrencias(_, [], 0) :- !.
+%ocorrencias(Elem, [Elem| Cauda], N) :-
+%	!,
+%	ocorrencias(Elem, Cauda, _n),
+%	N is _n+1.
+%ocorrencias(Elem, [NotElem| Cauda], N) :-
+%	Elem \== NotElem,
+%	!,
+%	ocorrencias(Elem, Cauda, N).
+
+maximoOcorrencias(Elemento, Lista, Maximo) :-
+	maximoOcorrencias(Elemento, Lista, Maximo, _).
+maximoOcorrencias(_, [], _, 0) :-
+	!.
+maximoOcorrencias(Elem, [NotElem| Cauda], Max, N) :-
 	Elem \== NotElem,
-	!,
-	ocorrencias(Elem, Cauda, N).
+	maximoOcorrencias(Elem, Cauda, Max, N),
+	!.
+maximoOcorrencias(Elem, [Elem| Cauda], Max, N) :-
+	maximoOcorrencias(Elem, Cauda, Max, _n),
+	N is _n+1,
+	N =< Max,
+	!.
+
+% custoDeslocamento(+PosAtual, +PosNova, -Custo) :-
+custoDeslocamento(PosAtual, PosNova, Custo) :-
+	use(distancia, D),
+	distancia(D, PosAtual, PosNova, Custo).
+
+% avaliaRestante(+PosAtual, +PosNova, -Avaliacao) :-
+avaliaRestante(_, PosNova, Avaliacao) :-
+	use(sala, IdSala),
+	use(distancia, D),
+	posicaoSaida(IdSala, PosSaida),
+	distancia(D, PosNova, PosSaida, Avaliacao).
+
+% calcula a distancia de alguma maneira
+distancia(manhattan, PosA, PosB, Distancia) :-
+	distManhattan(PosA, PosB, Distancia).
+distancia(diagHorVert, PosA, PosB, Distancia) :-
+	dist45DiagHorVert(PosA, PosB, Distancia).
+distancia(euclidiana, PosA, PosB, Distancia) :-
+	distEuclidiana(PosA, PosB, Distancia).
 
 %custoPasso(PosAtual, PosVizinho, Custo) :-
 %	distManhattan(PosAtual, PosVizinho, Custo).
