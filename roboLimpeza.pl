@@ -466,4 +466,14 @@ representacaoTile(_, _, _, Repr) :-
 	tile(vazio, Repr),
 	!.
 
-% montarSala(Ls), member(Chrs, Ls), atomics_to_string(Chrs, Str)
+:- use_module(library(dcg/high_order)).
+mostrarSalaHTML(Sala) :-
+	html(table(
+		[class([table, 'table-striped']),style('width:auto; border: solid black;')],
+		[\foreach(member(Linha, Sala),
+		html(tr([
+			\foreach(member(Coluna, Linha),
+				html(td(style('text-align:center; vertical-align:center; padding:0; border: 1px solid black; margin:0; width: 20px; height:20px;'), Coluna)))
+			]))
+		)]
+	)).
