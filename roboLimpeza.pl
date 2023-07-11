@@ -66,6 +66,9 @@ use(distancia, manhattan).
 % use(sala, +IdSala)
 use(sala, 1).
 
+% escolhe o tamanho do quadrado que representa uma posicao na sala
+use(tileSize, "20px").
+
 % escolhe o caractere que representa cada posicao
 tile(entrada, 'E').
 tile(saida, 'S').
@@ -469,12 +472,13 @@ representacaoTile(_, _, _, Repr) :-
 
 :- use_module(library(dcg/high_order)).
 mostrarSalaHTML(Sala) :-
+    use(tileSize, TileSize),
 	html(table(
 		[class([table, 'table-striped']),style('width:auto; border: solid black;')],
 		[\foreach(member(Linha, Sala),
 		html(tr([
 			\foreach(member(Coluna, Linha),
-				html(td(style('text-align:center; vertical-align:center; padding:0; border: 1px solid black; margin:0; width: 20px; height:20px;'), Coluna)))
+				html(td(style(['text-align:center; vertical-align:center; padding:0; border: 1px solid black; margin:0; width: ',TileSize,'; height: ',TileSize,';']), Coluna)))
 			]))
 		)]
 	)).
