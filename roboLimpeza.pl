@@ -66,6 +66,13 @@ use(distancia, manhattan).
 % use(sala, +IdSala)
 use(sala, 1).
 
+% escolhe o caractere que representa cada posicao
+tile(entrada, 'E').
+tile(saida, 'S').
+tile(vazio, '_').
+tile(sujeira, '-').
+tile(obstaculo, 'X').
+
 % ==============================
 % buscas
 % ------------------------------
@@ -404,3 +411,59 @@ distEuclidiana(pos(Ax, Ay),pos(Bx, By), Dist) :-
 	_dx is abs(Bx-Ax),
 	_dy is abs(By-Ay),
 	Dist is sqrt(_dx**2+_dy**2).
+
+/*
+==============================
+calculos de distância
+------------------------------
+*/
+montarSala(Sala) :-
+    montarLinhas(1, Ls).
+
+montarLinhas(NumLinha, [New|Old]) :-
+    use(sala, IdSala),
+    tamanhoSala(IdSala, _, MaxLinhas),
+    NumLinha =< MaxLinhas,
+    ProximaLinha is NumLinha+1,
+    montarLinhas(ProximaLinha, Old),
+    montarColunas(NumLinha, 1, New).
+
+montarLinhas(NumLinha, []) :-
+    use(sala, IdSala),
+    tamanhoSala(IdSala, _, MaxLinhas),
+    NumLinha > MaxLinhas.
+
+montarColunas(NumLinha, NumColuna, [New|Old]) :-
+    use(sala, IdSala),
+    tamanhoSala(IdSala, MaxColunas, _),
+    NumColuna =< MaxColunas,
+    ProximaColuna is NumColuna+1,
+    montarColunas(NumLinha, ProximaColuna, Old),
+    representacaoTile(IdSala, NumLinha, NumColuna, New).
+
+montarColunas(_, NumColuna, []) :-
+    use(sala, IdSala),
+    tamanhoSala(IdSala, MaxColunas, _),
+    NumColuna > MaxColunas.
+
+representacaoTile(IdSala, X, Y, Repr) :-
+    posicaoEntrada(IdSala, pos(X, Y)),
+    tile(entrada, Repr),
+    !.
+representacaoTile(IdSala, X, Y, Repr) :-
+	posicaoSaida(IdSala, pos(X, Y)),
+	tile(saida, Repr),
+	!.
+representacaoTile(IdSala, X, Y, Repr) :-
+	sujeira(IdSala, pos(X, Y)),
+	tile(sujeira, Repr),
+	!.
+representacaoTile(IdSala, X, Y, Repr) :-
+	obstaculo(IdSala, pos(X, Y)),
+	tile(obstaculo, Repr),
+	!.
+representacaoTile(_, _, _, Repr) :-
+	tile(vazio, Repr),
+	!.
+
+% montarSala(Ls), member(Chrs, Ls), atomics_to_string(Chrs, Str)
