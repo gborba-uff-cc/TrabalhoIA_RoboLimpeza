@@ -99,7 +99,7 @@ ordenaF/2
 objetivo/1
 */
 hillClimb([[_, No|Caminho]|_], Solucao, '-') :-
-	objetivo(No),
+	objetivo([No|Caminho]),
 	reverse([No|Caminho], Solucao).
 hillClimb([Caminho|Caminhos], Solucao, Custo) :-
 	estendeH(Caminho, NovosCaminhos),
@@ -118,7 +118,7 @@ ordenaF/2
 objetivo/1
 */
 bestFirst([[_, No|Caminho]|_], Solucao, '-'):-
-	objetivo(No),
+	objetivo([No|Caminho]),
 	reverse([No|Caminho], Solucao).
 bestFirst([Caminho|Caminhos], Solucao, Custo):-
 	estendeH(Caminho, NovosCaminhos),
@@ -137,7 +137,7 @@ ordenaF/2
 objetivo/1
 */
 branchAndBound([[G, No|Caminho]|_], Solucao, G):-
-	objetivo(No),
+	objetivo([No|Caminho]),
 	reverse([No|Caminho], Solucao).
 branchAndBound([Caminho|Caminhos], Solucao, G):-
 	estendeG(Caminho, NovosCaminhos),
