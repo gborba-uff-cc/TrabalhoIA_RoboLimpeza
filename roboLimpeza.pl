@@ -44,7 +44,7 @@ limparSala(PosInicial, Solucao, Custo) :-
 % definicoes
 % ------------------------------
 % escolhe o algoritmo de busca a ser usado
-%use(busca, hillclimb).
+%use(busca, hillClimb).
 %use(busca, bestFirst).
 %use(busca, branchAndBound).
 use(busca, aEstrela).
