@@ -277,8 +277,13 @@ maiorF([F1|_], [F2|_]):-
 % ------------------------------
 % heuristica
 heuristica(PosAtual, Caminho, PosNova, DeltaG, H) :-
+	% passou pela saida 1 vez no máximo
+	use(sala, IdSala),
+	posicaoSaida(IdSala, PosSaida),
+	maximoOcorrencias(PosSaida, Caminho, 1),
 	proximoQuadrado(PosAtual, PosNova),
-	maximoOcorrencias(PosNova, Caminho, 2),
+	% ocorrencias anteriores deve ser no máximo 1
+	maximoOcorrencias(PosNova, Caminho, 1),
 	custoDeslocamento(PosAtual, PosNova, DeltaG),
 	avaliaRestante(PosAtual, PosNova, H).
 
