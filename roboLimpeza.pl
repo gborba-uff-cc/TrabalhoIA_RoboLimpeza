@@ -34,10 +34,6 @@ resolveProblema(Solucao, Custo) :-
 % limparSala(+PosInicial, +PosFinal, -Solucao, -Custo)
 limparSala(PosInicial, Solucao, Custo) :-
 	use(busca, B),
-	% use(concatena, C),
-	% use(ordena, O),
-	% use(sala, IdSala),
-	% mapaSala(IdSala, S),
 	busca(B, PosInicial, Solucao, Custo).
 
 % ==============================
@@ -297,12 +293,6 @@ proximoQuadrado(PosAtual, PosNova) :-
 % REVIEW - \+obstaculo; \+(obstaculo); \+ obstaculo;
 % REVIEW - todos passaram a funcionar depois de executar not(obstaculo)
 	\+obstaculo(PosNova).
-	% % nova posicao tem sujeira
-	% sujeira(PosNova),
-	% verifica que a PosNova foi visitada no maximo uma vez
-	%maxOcorrencias(PosNova, Caminho, Oc),
-	% visitado no maximo 1 vez
-	%2 >= Oc.
 
 % posicaoVizinha(+PosAtual, -PosVizinha)
 % acima
@@ -352,17 +342,6 @@ obstaculo(Pos) :-
 	use(sala, IdSala),
 	obstaculo(IdSala, Pos).
 
-%% ocorrencias(+Elemento, +Lista, -NumOcorrencias)
-%ocorrencias(_, [], 0) :- !.
-%ocorrencias(Elem, [Elem| Cauda], N) :-
-%	!,
-%	ocorrencias(Elem, Cauda, _n),
-%	N is _n+1.
-%ocorrencias(Elem, [NotElem| Cauda], N) :-
-%	Elem \== NotElem,
-%	!,
-%	ocorrencias(Elem, Cauda, N).
-
 maximoOcorrencias(Elemento, Lista, Maximo) :-
 	maximoOcorrencias(Elemento, Lista, Maximo, _).
 maximoOcorrencias(_, [], _, 0) :-
@@ -402,12 +381,6 @@ distancia(diagHorVert, PosA, PosB, Distancia) :-
 	dist45DiagHorVert(PosA, PosB, Distancia).
 distancia(euclidiana, PosA, PosB, Distancia) :-
 	distEuclidiana(PosA, PosB, Distancia).
-
-%custoPasso(PosAtual, PosVizinho, Custo) :-
-%	distManhattan(PosAtual, PosVizinho, Custo).
-
-%avaliacao(PosAtual, PosVizinho, Custo) :-
-%	distManhattan(PosAtual, PosVizinho, Custo).
 
 % ==============================
 % calculos de distância
