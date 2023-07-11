@@ -310,6 +310,7 @@ posicaoVizinha(pos(X,Y), pos(X, NovoY)) :-
 	NovoY is Y-1.
 % acima direita
 posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
+	use(distancia, diagHorVert),
 	NovoY is Y-1,
 	NovoX is X+1.
 % direita
@@ -317,6 +318,7 @@ posicaoVizinha(pos(X,Y), pos(NovoX, Y)):-
 	NovoX is X+1.
 % abaixo direita
 posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
+	use(distancia, diagHorVert),
 	NovoY is Y+1,
 	NovoX is X+1.
 % abaixo
@@ -324,6 +326,7 @@ posicaoVizinha(pos(X,Y), pos(X, NovoY)) :-
 	NovoY is Y+1.
 % abaixo esquerda
 posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
+	use(distancia, diagHorVert),
 	NovoY is Y+1,
 	NovoX is X-1.
 % esquerda
@@ -331,6 +334,7 @@ posicaoVizinha(pos(X,Y), pos(NovoX, Y)) :-
 	NovoX is X-1.
 % acima esquerda
 posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
+	use(distancia, diagHorVert),
 	NovoY is Y-1,
 	NovoX is X-1.
 
@@ -379,6 +383,12 @@ custoDeslocamento(PosAtual, PosNova, Custo) :-
 	distancia(D, PosAtual, PosNova, Custo).
 
 % avaliaRestante(+PosAtual, +PosNova, -Avaliacao) :-
+avaliaRestante(_, PosNova, Avaliacao) :-
+	use(sala, IdSala),
+	use(distancia, diagHorVert),
+	!,
+	posicaoSaida(IdSala, PosSaida),
+	distancia(euclidiana, PosNova, PosSaida, Avaliacao).
 avaliaRestante(_, PosNova, Avaliacao) :-
 	use(sala, IdSala),
 	use(distancia, D),
