@@ -477,7 +477,7 @@ representacaoTile(_, _, _, Repr) :-
 
 :- use_module(library(dcg/high_order)).
 mostrarSalaHTML(Sala) :-
-    use(tileSize, TileSize),
+	use(tileSize, TileSize),
 	html(table(
 		[class([table, 'table-striped']),style('width:auto; border: solid black;')],
 		[\foreach(member(Linha, Sala),
