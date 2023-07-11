@@ -69,9 +69,9 @@ use(sala, 1).
 % escolhe o caractere que representa cada posicao
 tile(entrada, 'E').
 tile(saida, 'S').
-tile(vazio, '_').
+tile(vazio, ' ').
 tile(sujeira, '-').
-tile(obstaculo, 'X').
+tile(obstaculo, '■').
 
 % ==============================
 % buscas
@@ -414,42 +414,43 @@ distEuclidiana(pos(Ax, Ay),pos(Bx, By), Dist) :-
 
 /*
 ==============================
-calculos de distância
+
 ------------------------------
 */
 montarSala(Sala) :-
-    montarLinhas(1, Ls).
+	montarLinhas(1, Sala),
+	!.
 
 montarLinhas(NumLinha, [New|Old]) :-
-    use(sala, IdSala),
-    tamanhoSala(IdSala, _, MaxLinhas),
-    NumLinha =< MaxLinhas,
-    ProximaLinha is NumLinha+1,
-    montarLinhas(ProximaLinha, Old),
-    montarColunas(NumLinha, 1, New).
+	use(sala, IdSala),
+	tamanhoSala(IdSala, _, MaxLinhas),
+	NumLinha =< MaxLinhas,
+	ProximaLinha is NumLinha+1,
+	montarLinhas(ProximaLinha, Old),
+	montarColunas(NumLinha, 1, New).
 
 montarLinhas(NumLinha, []) :-
-    use(sala, IdSala),
-    tamanhoSala(IdSala, _, MaxLinhas),
-    NumLinha > MaxLinhas.
+	use(sala, IdSala),
+	tamanhoSala(IdSala, _, MaxLinhas),
+	NumLinha > MaxLinhas.
 
 montarColunas(NumLinha, NumColuna, [New|Old]) :-
-    use(sala, IdSala),
-    tamanhoSala(IdSala, MaxColunas, _),
-    NumColuna =< MaxColunas,
-    ProximaColuna is NumColuna+1,
-    montarColunas(NumLinha, ProximaColuna, Old),
-    representacaoTile(IdSala, NumLinha, NumColuna, New).
+	use(sala, IdSala),
+	tamanhoSala(IdSala, MaxColunas, _),
+	NumColuna =< MaxColunas,
+	ProximaColuna is NumColuna+1,
+	montarColunas(NumLinha, ProximaColuna, Old),
+	representacaoTile(IdSala, NumLinha, NumColuna, New).
 
 montarColunas(_, NumColuna, []) :-
-    use(sala, IdSala),
-    tamanhoSala(IdSala, MaxColunas, _),
-    NumColuna > MaxColunas.
+	use(sala, IdSala),
+	tamanhoSala(IdSala, MaxColunas, _),
+	NumColuna > MaxColunas.
 
 representacaoTile(IdSala, X, Y, Repr) :-
-    posicaoEntrada(IdSala, pos(X, Y)),
-    tile(entrada, Repr),
-    !.
+	posicaoEntrada(IdSala, pos(X, Y)),
+	tile(entrada, Repr),
+	!.
 representacaoTile(IdSala, X, Y, Repr) :-
 	posicaoSaida(IdSala, pos(X, Y)),
 	tile(saida, Repr),
@@ -477,3 +478,9 @@ mostrarSalaHTML(Sala) :-
 			]))
 		)]
 	)).
+
+/** <examples>
+?- resolveProblema(Solucao, Custo).
+?- montarSala(Ls).
+?- montarSala(Sala), mostrarSalaHTML(Sala), projection([]).
+*/
