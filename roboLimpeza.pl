@@ -491,8 +491,8 @@ mostrarSalaHTML(Sala) :-
 	html(table(
 		[class(table), style('width:auto; border: solid black;')],
 		[\foreach(member(Linha, Sala),
-			html(tr([
-				\foreach(member(Coluna, Linha),
+			html(tr(
+				[\foreach(member(Coluna, Linha),
 					html(td(
 						style([
 							'text-align:center; ',
@@ -504,8 +504,8 @@ mostrarSalaHTML(Sala) :-
 							'height: ', TileSize, ';']),
 						Coluna
 					))
-				)
-			]))
+				)]
+			))
 		)]
 	)).
 
@@ -518,8 +518,8 @@ mostrarSolucaoHTML(Solucao) :-
 	html(table(
 		[class(table), style('width:auto; border: solid black;')],
 		[\foreach(between(1, Altura, Y),
-			html(tr([
-				\foreach((between(1, Largura, X), Pos = pos(X, Y), textoCelulaSolucao(IdSala, Solucao, Pos, Texto)),
+			html(tr(
+				[\foreach((between(1, Largura, X), Pos = pos(X, Y), textoCelulaSolucao(IdSala, Solucao, Pos, Texto)),
 					html(td(
 						style([
 							'text-align:center; ',
@@ -531,9 +531,9 @@ mostrarSolucaoHTML(Solucao) :-
 							'height: ', TileSize, ';']),
 						Texto
 					))
-				)
-			]))
-		)]
+				)] % \foreach((between(1, Largura, X)
+			))
+		)] % \foreach(between(1, Altura, Y)
 	)).
 
 % encontra a posicao de um elemento na lista (logica de membro e soma)
