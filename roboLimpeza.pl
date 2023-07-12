@@ -384,7 +384,7 @@ custoDeslocamento(PosAtual, PosNova, Custo) :-
 
 % avalia o quao perto da solucao o caminho atual esta
 % estimaRestante(+Caminho, +PosNova, -Avaliacao) :-
-estimaRestante([PosAtual|Caminho], PosNova, Avaliacao) :-
+estimaRestante(_, PosNova, Avaliacao) :-
 	use(sala, IdSala),
 	use(distancia, D),
 	posicaoSaida(IdSala, PosSaida),
