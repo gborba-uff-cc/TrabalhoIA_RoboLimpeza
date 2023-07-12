@@ -42,6 +42,9 @@ limparSala(PosInicial, Solucao, Custo) :-
 	CONFIGURACOES
 --------------------------------------------------------------------------------
 */
+% permite o movimento do robo para as diagonais
+use(move, diagonais).
+
 % escolhe o limite de solucoes retornados ao procurar a solucao
 use(limiteSolucoes, 1).
 
@@ -51,6 +54,16 @@ use(limiteSolucoes, 1).
 %use(busca, branchAndBound).
 use(busca, aEstrela).
 
+% escolher o calculo de distancia a ser usado para calcular custo
+use(distanciaCusto, manhattan).
+%use(distanciaCusto, diagHorVert).
+%use(distanciaCusto, euclidiana).
+
+% escolher o calculo de distancia a ser usado na avaliacao
+use(distanciaAvaliacao, manhattan).
+%use(distanciaAvaliacao, diagHorVert).
+%use(distanciaAvaliacao, euclidiana).
+
 % escolher o algoritmo de concatenacao a ser usado
 use(concatena, builtin).
 %use(concatena, customizado).
@@ -58,14 +71,6 @@ use(concatena, builtin).
 % escolher o algoritmo de ordenacao a ser usado
 use(ordena, builtin).
 %use(ordena, customizado).
-
-% permite o movimento do robo para as diagonais
-use(move, diagonais).
-
-% escolher o calculo de distancia a ser usado
-use(distancia, manhattan).
-%use(distancia, diagHorVert).
-%use(distancia, euclidiana).
 
 % escolher o id da sala para resolver o problema
 % use(sala, +IdSala)
@@ -372,14 +377,14 @@ maximoOcorrencias(Elem, [Elem| Cauda], Max, N) :-
 % calcula o custo de deslocamento como a distancia entre as duas posicoes
 % custoDeslocamento(+PosAtual, +PosNova, -Custo) :-
 custoDeslocamento(PosAtual, PosNova, Custo) :-
-	use(distancia, D),
+	use(distanciaCusto, D),
 	distancia(D, PosAtual, PosNova, Custo).
 
 % avalia o quao perto da solucao o caminho atual esta
 % estimaRestante(+Caminho, +PosNova, -Avaliacao) :-
 estimaRestante(_, PosNova, Avaliacao) :-
+	use(distanciaAvaliacao, D),
 	use(sala, IdSala),
-	use(distancia, D),
 	posicaoSaida(IdSala, PosSaida),
 	distancia(D, PosNova, PosSaida, Avaliacao).
 
@@ -562,13 +567,15 @@ montarSala(SalaSuja).
 ?-
 montarSala(SalaSuja),
 resolveProblema(Solucao, Custo),
-use(distancia, FormulaDistancia),
+use(distanciaCusto, FormulaCusto),
+use(distanciaAvaliacao, FormulaAvaliacao),
 use(busca, AlgoritmoBusca).
 
 % lista a solucao
 ?-
 resolveProblema(Solucao, Custo),
-use(distancia, FormulaDistancia),
+use(distanciaCusto, FormulaCusto),
+use(distanciaAvaliacao, FormulaAvaliacao),
 use(busca, AlgoritmoBusca).
 
 % exibe sala como elemento html
@@ -583,7 +590,8 @@ montarSala(SalaSuja),
 mostrarSalaHTML(SalaSuja),
 resolveProblema(Solucao, Custo),
 mostrarSolucaoHTML(Solucao),
-use(distancia, FormulaDistancia),
+use(distanciaCusto, FormulaCusto),
+use(distanciaAvaliacao, FormulaAvaliacao),
 use(busca, AlgoritmoBusca),
-projection([Custo, FormulaDistancia,AlgoritmoBusca]).
+projection([Custo, FormulaCusto, FormulaAvaliacao, AlgoritmoBusca]).
 */
