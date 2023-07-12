@@ -6,9 +6,9 @@ Os numeros de posicao iniciam em 1, o canto superior esquerdo é pos(1,1)).
 */
 
 /*
-==============================
-configuracoes problema
-------------------------------
+================================================================================
+	PROBLEMAS
+--------------------------------------------------------------------------------
 */
 % tamanhoSala(+IdSala, +Largura, +Altura)
 tamanhoSala(1, 5, 5).
@@ -37,6 +37,11 @@ limparSala(PosInicial, Solucao, Custo) :-
 	use(limiteSolucoes, L),
 	busca(B, L, PosInicial, Solucao, Custo).
 
+/*
+================================================================================
+	CONFIGURACOES
+--------------------------------------------------------------------------------
+*/
 % ==============================
 % definicoes
 % ------------------------------
@@ -79,6 +84,11 @@ use(representacaoVazio, ' ').
 use(representacaoSujeira, '-').
 use(representacaoObstaculo, '■').
 
+/*
+================================================================================
+	ABSTRACOES BUSCAS
+--------------------------------------------------------------------------------
+*/
 % ==============================
 % buscas
 % ------------------------------
@@ -91,6 +101,11 @@ busca(branchAndBound, LimiteSolucoes, PosInicial, Solucao, Custo) :-
 busca(aEstrela, LimiteSolucoes, PosInicial, Solucao, Custo) :-
 	limit(LimiteSolucoes, aEstrela([[0,0,0,PosInicial]], Solucao, Custo)).
 
+/*
+================================================================================
+	ALGORITMOS BUSCAS
+--------------------------------------------------------------------------------
+*/
 /*
 LOGICA:
 verifica > estende (avaliacao) > ordena (extensao) > concatena (prepende extensao)> repete
@@ -109,7 +124,7 @@ hillClimb([Caminho|Caminhos], Solucao, Custo) :-
 	ordena(NovosCaminhos, CaminhosOrd),
 	concatena(CaminhosOrd, Caminhos, CaminhosTotal),
 	hillClimb(CaminhosTotal, Solucao, Custo).
-% ----------
+
 /*
 LOGICA:
 verifica > estende (avaliacao) > concatena > ordena > repete
@@ -128,7 +143,7 @@ bestFirst([Caminho|Caminhos], Solucao, Custo):-
 	concatena(NovosCaminhos, Caminhos, CaminhosTotal),
 	ordena(CaminhosTotal, CaminhosOrd),
 	bestFirst(CaminhosOrd, Solucao, Custo).
-% ----------
+
 /*
 LOGICA:
 verifica > estende (custo) > concatena > ordena > repete
@@ -147,7 +162,7 @@ branchAndBound([Caminho|Caminhos], Solucao, G):-
 	concatena(Caminhos, NovosCaminhos, CaminhosTotal),
 	ordena(CaminhosTotal, CaminhosTotOrd),
 	branchAndBound(CaminhosTotOrd, Solucao, G).
-% ----------
+
 /*
 LOGICA:
 verifica > estende (custo + avaliacao) > concatena > ordena > repete
@@ -167,50 +182,28 @@ aEstrela([Caminho|Caminhos], Solucao, G) :-
 	ordena(CaminhosTotal, CaminhosTotOrd),
 	aEstrela(CaminhosTotOrd, Solucao, G).
 
-% ==============================
-%
-% ------------------------------
+/*
+================================================================================
+	OBJETIVO E EXTENSORES
+--------------------------------------------------------------------------------
+*/
+% verifica se o Caminho satisfaz é uma solucao para o problema
+% objetivo(+Caminho)
 objetivo([PosAtual|PosPassadas]):-
 	use(sala, IdSala),
 	findall(Pos, sujeira(IdSala, Pos), Sujeiras),
 	subconjunto(Sujeiras, PosPassadas),
 	posicaoSaida(IdSala, PosAtual).
 
+% verifica se todos os elementos em Lista1 estao em Lista2
+% subconjunto(+Lista1, +Lista2)
 subconjunto([], [_|_]).
 subconjunto([H1|T1], L2) :-
 	memberchk(H1, L2),
 	subconjunto(T1, L2).
 
-% ==============================
-% extensores
-% ------------------------------
-%estendeF([_, GC, _, No|Caminho], NovosCaminhos):-
-%	findall([FNovo, GNovo, HNovo, NovoNo, No|Caminho],
-%		(
-%			sF(GN, HN, _, No, NovoNo),
-%			not(member(NovoNo, [No|Caminho])),
-%			GNovo is GC + GN,
-%			HNovo is HN,
-%			FNovo is GNovo + HNovo
-%		),
-%		NovosCaminhos).
-
-%estendeG([G, No|Caminho], NovosCaminhos) :-
-%	findall([GNovo, NovoNo, No|Caminho],
-%		(
-%			sG(GN, No, NovoNo),
-%			not(member(NovoNo, [No|Caminho])),
-%			GNovo is GN + G),
-%		NovosCaminhos).
-
-%estendeH([_, No|Caminho], NovosCaminhos) :-
-%	findall([HNovo, NovoNo, No|Caminho],
-%		(
-%			sH(HN, No, NovoNo),
-%			not(member(NovoNo, [No|Caminho])),
-%			HNovo is HN),
-%		NovosCaminhos).
-
+% gera todos os caminhos ao mover uma posicao a partir da posicao atual
+% estendeF(+FGHCaminho, -NovosCaminhos)
 estendeF([_, G, _, No|Caminho], NovosCaminhos) :-
 	findall([FNovo, GNovo, HNovo, NovoNo, No|Caminho],
 		(
@@ -222,6 +215,8 @@ estendeF([_, G, _, No|Caminho], NovosCaminhos) :-
 		),
 		NovosCaminhos).
 
+% gera todos os caminhos ao mover uma posicao a partir da posicao atual
+% estendeG(+GCaminho, -NovosCaminhos)
 estendeG([G, No|Caminho], NovosCaminhos) :-
 	findall([GNovo, NovoNo, No|Caminho],
 		(
@@ -231,14 +226,16 @@ estendeG([G, No|Caminho], NovosCaminhos) :-
 		),
 		NovosCaminhos).
 
+% gera todos os caminhos ao mover uma posicao a partir da posicao atual
+% estendeG(+HCaminho, -NovosCaminhos)
 estendeH([_, No|Caminho], NovosCaminhos) :-
 	findall([HNovo, NovoNo, No|Caminho],
 		(
 			heuristica([No|Caminho], NovoNo, _, HNovo)
 		),
 		NovosCaminhos).
-% ----------
 
+% abstracao da funcao de concatenacao
 concatena(L1, L2, L3) :-
 	use(concatena, C),
 	concatena(C, L1, L2, L3).
@@ -279,16 +276,27 @@ quicksortF([X|Cauda], ListaOrd):-
 
 maiorF([F1|_], [F2|_]):-
 	F1 > F2.
+
+/*
+================================================================================
+	HEURISTICAS
+--------------------------------------------------------------------------------
 */
+% gera nova posicao a partir da posicao atual, custo do movimento e avalizaçao
+% heuristica(+Caminho, -PosNova, -DeltaG, -H)
 heuristica([PosAtual|PosPassadas], PosNova, DeltaG, H) :-
+	% passou pela saida no maximo 1 vez
 	use(sala, IdSala),
 	posicaoSaida(IdSala, PosSaida),
 	maximoOcorrencias(PosSaida, [PosAtual|PosPassadas], 1),
 	proximoQuadrado(PosAtual, PosNova),
+	% ocorrencia anterior da nova posicao no maximo 1 vez (para entrar e sair)
+	% REVIEW - limita o número de corredores que compartilham um mesmo quadrado
 	maximoOcorrencias(PosNova, [PosAtual|PosPassadas], 1),
 	custoDeslocamento(PosAtual, PosNova, DeltaG),
 	estimaRestante([PosAtual|PosPassadas], PosNova, H).
 
+% gera PosNova vizinha a PosAtual que esta dentro da sala e nao tenha obstaculo
 % proximoQuadrado(+PosAtual, +Caminho, -PosNova)
 proximoQuadrado(PosAtual, PosNova) :-
 	% posicao ao lado da atual
@@ -300,6 +308,7 @@ proximoQuadrado(PosAtual, PosNova) :-
 % REVIEW - todos passaram a funcionar depois de executar not(obstaculo)
 	\+obstaculo(PosNova).
 
+% gera PosVizinha vizinha a PosAtual
 % posicaoVizinha(+PosAtual, -PosVizinha)
 % acima
 posicaoVizinha(pos(X,Y), pos(X, NovoY)) :-
@@ -334,6 +343,7 @@ posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
 	NovoY is Y-1,
 	NovoX is X-1.
 
+% verifica se posicao esta dentro dos limites da sala
 % dentroSala(+PosicaoQualquer)
 dentroSala(pos(X,Y)) :-
 	use(sala, IdSala),
@@ -343,13 +353,17 @@ dentroSala(pos(X,Y)) :-
 	0 < Y,
 	Y =< Alt.
 
+% verifica se posicao na sala tem obstaculo
 % obstaculo(+PosicaoQualquer)
 obstaculo(Pos) :-
 	use(sala, IdSala),
 	obstaculo(IdSala, Pos).
 
+% falha caso Elemento tenha aparecido mais vezes que Maximo em Lista
+% maximoOcorrencias(+Elemento, +Lista, +Maximo)
 maximoOcorrencias(Elemento, Lista, Maximo) :-
 	maximoOcorrencias(Elemento, Lista, Maximo, _).
+% maximoOcorrencias(+Elemento, +Lista, +Maximo, -Contagem)
 maximoOcorrencias(_, [], _, 0) :-
 	!.
 maximoOcorrencias(Elem, [NotElem| Cauda], Max, N) :-
@@ -362,18 +376,22 @@ maximoOcorrencias(Elem, [Elem| Cauda], Max, N) :-
 	N =< Max,
 	!.
 
+% calcula o custo de deslocamento como a distancia entre as duas posicoes
 % custoDeslocamento(+PosAtual, +PosNova, -Custo) :-
 custoDeslocamento(PosAtual, PosNova, Custo) :-
 	use(distancia, D),
 	distancia(D, PosAtual, PosNova, Custo).
 
+% avalia o quao perto da solucao o caminho atual esta
+% estimaRestante(+Caminho, +PosNova, -Avaliacao) :-
 estimaRestante([PosAtual|Caminho], PosNova, Avaliacao) :-
 	use(sala, IdSala),
 	use(distancia, D),
 	posicaoSaida(IdSala, PosSaida),
 	distancia(D, PosNova, PosSaida, Avaliacao).
 
-% calcula a distancia de alguma maneira
+% calcula a distancia de usando alguma formula
+% distancia(+IdDistancia, +PosA, +PosB, -Distancia)
 distancia(manhattan, PosA, PosB, Distancia) :-
 	distManhattan(PosA, PosB, Distancia).
 distancia(diagHorVert, PosA, PosB, Distancia) :-
@@ -381,38 +399,45 @@ distancia(diagHorVert, PosA, PosB, Distancia) :-
 distancia(euclidiana, PosA, PosB, Distancia) :-
 	distEuclidiana(PosA, PosB, Distancia).
 
-% ==============================
-% calculos de distância
-% ------------------------------
+/*
+================================================================================
+	FORMULAS DISTANCIAS
+--------------------------------------------------------------------------------
+*/
 % distancia considerando movimentos horizontais e verticais
+% distanciaManhattan(+PosicaoA, +PosicaoB, -Distancia)
 distManhattan(pos(Ax, Ay), pos(Bx, By), Dist) :-
 	_dx is abs(Bx-Ax),
 	_dy is abs(By-Ay),
 	Dist is _dx+_dy.
 
 % distancia considerando movimentos diagonais de 45, horizontais e verticais
+% dist45DiagHorVert(+PosicaoA, +PosicaoB, -Distancia)
 dist45DiagHorVert(pos(Ax, Ay),pos(Bx, By), Dist) :-
 	_dx is abs(Bx-Ax),
 	_dy is abs(By-Ay),
 	Dist is max(_dx, _dy).
 
 % distancia em linha reta
+% distanciaEuclidiana(+PosicaoA, +PosicaoB, -Distancia)
 distEuclidiana(pos(Ax, Ay),pos(Bx, By), Dist) :-
 	_dx is abs(Bx-Ax),
 	_dy is abs(By-Ay),
 	Dist is sqrt(_dx**2+_dy**2).
 
 /*
-==============================
-
-------------------------------
+================================================================================
+	REPRESENTACOES
+--------------------------------------------------------------------------------
 */
-%
+% representa a sala como matriz
+% montarSala(-Sala)
 montarSala(Sala) :-
 	montarLinhas(1, Sala),
 	!.
 
-%
+% agrupa as linhas da matriz que representa a sala
+% montarLinhas(+NumLinha, -Matriz)
 montarLinhas(NumLinha, [New|Old]) :-
 	use(sala, IdSala),
 	tamanhoSala(IdSala, _, MaxLinhas),
@@ -425,6 +450,8 @@ montarLinhas(NumLinha, []) :-
 	tamanhoSala(IdSala, _, MaxLinhas),
 	NumLinha > MaxLinhas.
 
+% lista as colunas da linha da matriz que representa a sala
+% montrarColunas(+NumLinha, +NumColuna, -Lista)
 montarColunas(NumLinha, NumColuna, [New|Old]) :-
 	use(sala, IdSala),
 	tamanhoSala(IdSala, MaxColunas, _),
@@ -437,6 +464,8 @@ montarColunas(_, NumColuna, []) :-
 	tamanhoSala(IdSala, MaxColunas, _),
 	NumColuna > MaxColunas.
 
+% recupera a representacao para os diferentes tipos de quadrados da sala
+% representacaoTile(+IdSala, +Pos, -Repr)
 representacaoTile(IdSala, Pos, Repr) :-
 	posicaoEntrada(IdSala, Pos),
 	use(representacaoEntrada, Repr),
@@ -458,6 +487,8 @@ representacaoTile(_, _, Repr) :-
 	!.
 
 :- use_module(library(dcg/high_order)).
+% exibe a matriz Sala como uma tabela html no swish.swi-prolog
+% mostrarSalaHTML(+Sala)
 mostrarSalaHTML(Sala) :-
 	use(tileSize, TileSize),
 	html(table(
