@@ -328,6 +328,12 @@ quicksortF([X|Cauda], ListaOrd):-
 maiorF([F1|_], [F2|_]):-
 	F1 > F2.
 
+% retorna os N primeiros elementos da Lista
+% nPrimeiros(+N, +Lista, -NPrimeiros).
+nPrimeiros(_, [], []) :- !.
+nPrimeiros(N, [H1|T1], [H1|T2]) :-
+    N1 is N-1,
+    nPrimeiros(N1, T1, T2).
 /*
 ================================================================================
 	HEURISTICAS
