@@ -34,11 +34,15 @@ resolveProblema(Solucao, Custo) :-
 % limparSala(+PosInicial, +PosFinal, -Solucao, -Custo)
 limparSala(PosInicial, Solucao, Custo) :-
 	use(busca, B),
-	busca(B, PosInicial, Solucao, Custo).
+	use(limiteSolucoes, L),
+	busca(B, L, PosInicial, Solucao, Custo).
 
 % ==============================
 % definicoes
 % ------------------------------
+% escolhe o limite de solucoes retornados ao procurar a solucao
+use(limiteSolucoes, 1).
+
 % escolhe o algoritmo de busca a ser usado
 %use(busca, hillClimb).
 %use(busca, bestFirst).
@@ -78,14 +82,14 @@ tile(obstaculo, '■').
 % ==============================
 % buscas
 % ------------------------------
-busca(hillClimb, PosInicial, Solucao, Custo) :-
-	hillClimb([[0,PosInicial]], Solucao, Custo).
-busca(bestFirst, PosInicial, Solucao, Custo) :-
-	bestFirst([[0,PosInicial]], Solucao, Custo).
-busca(branchAndBound, PosInicial, Solucao, Custo) :-
-	branchAndBound([[0,PosInicial]], Solucao, Custo).
-busca(aEstrela,  PosInicial, Solucao, Custo) :-
-	aEstrela([[0,0,0,PosInicial]], Solucao, Custo).
+busca(hillClimb, LimiteSolucoes, PosInicial, Solucao, Custo) :-
+	limit(LimiteSolucoes, hillClimb([[0,PosInicial]], Solucao, Custo)).
+busca(bestFirst, LimiteSolucoes, PosInicial, Solucao, Custo) :-
+	limit(LimiteSolucoes, bestFirst([[0,PosInicial]], Solucao, Custo)).
+busca(branchAndBound, LimiteSolucoes, PosInicial, Solucao, Custo) :-
+	limit(LimiteSolucoes, branchAndBound([[0,PosInicial]], Solucao, Custo)).
+busca(aEstrela, LimiteSolucoes, PosInicial, Solucao, Custo) :-
+	limit(LimiteSolucoes, aEstrela([[0,0,0,PosInicial]], Solucao, Custo)).
 
 /*
 LOGICA:
