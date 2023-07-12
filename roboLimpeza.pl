@@ -64,6 +64,9 @@ use(distanciaAvaliacao, manhattan).
 %use(distanciaAvaliacao, diagHorVert).
 %use(distanciaAvaliacao, euclidiana).
 
+% escolher se o valor da avaliacao acumula ou não
+use(atualizaH, acumula).
+
 % escolher o algoritmo de concatenacao a ser usado
 use(concatena, builtin).
 %use(concatena, customizado).
@@ -203,14 +206,15 @@ subconjunto([H1|T1], L2) :-
 
 % gera todos os caminhos ao mover uma posicao a partir da posicao atual
 % estendeF(+FGHCaminho, -NovosCaminhos)
-estendeF([_, G, _, No|Caminho], NovosCaminhos) :-
-	findall([FNovo, GNovo, HNovo, NovoNo, No|Caminho],
+estendeF([_, G, HAnterior, No|Caminho], NovosCaminhos) :-
+	findall([FNovo, GNovo, HAtualizado, NovoNo, No|Caminho],
 		(
 			heuristica([No|Caminho], NovoNo, DeltaG, HNovo),
 			% calcula custo
 			GNovo is G + DeltaG,
+			atualizaH(HAnterior, HNovo, HAtualizado),
 			% estimativa total
-			FNovo is GNovo + HNovo
+			FNovo is GNovo + HAtualizado
 		),
 		NovosCaminhos).
 
@@ -227,12 +231,22 @@ estendeG([G, No|Caminho], NovosCaminhos) :-
 
 % gera todos os caminhos ao mover uma posicao a partir da posicao atual
 % estendeG(+HCaminho, -NovosCaminhos)
-estendeH([_, No|Caminho], NovosCaminhos) :-
-	findall([HNovo, NovoNo, No|Caminho],
+estendeH([HAnterior, No|Caminho], NovosCaminhos) :-
+	findall([HAtualizado, NovoNo, No|Caminho],
 		(
-			heuristica([No|Caminho], NovoNo, _, HNovo)
+			heuristica([No|Caminho], NovoNo, _, HNovo),
+			atualizaH(HAnterior, HNovo, HAtualizado)
 		),
 		NovosCaminhos).
+
+% atualiza o valor da avaliacao quando estendendo o caminho
+% atualizaH(+ Anterior, +Atual, -Novo)
+atualizaH(Anterior, Atual, Novo) :-
+	use(atualizaH, acumula),
+	Novo is Anterior + Atual,
+	!.
+atualizaH(_, Atual, Atual) :-
+	!.
 
 % abstracao da funcao de concatenacao
 concatena(L1, L2, L3) :-
