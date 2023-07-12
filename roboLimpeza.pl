@@ -247,8 +247,8 @@ ordena(Original, Ordenado) :-
 	ordena(O, Original, Ordenado).
 % ordena usando a funcao interna
 ordena(builtin, Original, Ordenado) :-
-	% sort remove duplicatas (atomos com mesmo endereco de memoria?)
-	sort(Original, Ordenado).
+	% sort remove duplicatas
+	msort(Original, Ordenado).
 % ordena usando quicksort
 ordena(customizado, Caminhos, CaminhosOrd) :-
 	quicksortF(Caminhos, CaminhosOrd).
