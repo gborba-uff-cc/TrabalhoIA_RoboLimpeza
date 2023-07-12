@@ -486,11 +486,12 @@ representacaoTile(_, _, Repr) :-
 mostrarSalaHTML(Sala) :-
 	use(tileSize, TileSize),
 	html(table(
-		[class([table, 'table-striped']),style('width:auto; border: solid black;')],
+		[class(table), style('width:auto; border: solid black;')],
 		[\foreach(member(Linha, Sala),
-		html(tr([
-			\foreach(member(Coluna, Linha),
-				html(td(style(['text-align:center; vertical-align:center; padding:0; border: 1px solid black; margin:0; width: ',TileSize,'; height: ',TileSize,';']), Coluna)))
+			html(tr([
+				\foreach(member(Coluna, Linha),
+					html(td(style(['text-align:center; vertical-align:center; padding:0; border: 1px solid black; margin:0; width: ',TileSize,'; height: ',TileSize,';']), Coluna))
+				)
 			]))
 		)]
 	)).
