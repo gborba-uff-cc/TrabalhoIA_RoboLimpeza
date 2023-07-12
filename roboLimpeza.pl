@@ -42,9 +42,6 @@ limparSala(PosInicial, Solucao, Custo) :-
 	CONFIGURACOES
 --------------------------------------------------------------------------------
 */
-% ==============================
-% definicoes
-% ------------------------------
 % escolhe o limite de solucoes retornados ao procurar a solucao
 use(limiteSolucoes, 1).
 
@@ -89,9 +86,6 @@ use(representacaoObstaculo, '■').
 	ABSTRACOES BUSCAS
 --------------------------------------------------------------------------------
 */
-% ==============================
-% buscas
-% ------------------------------
 busca(hillClimb, LimiteSolucoes, PosInicial, Solucao, Custo) :-
 	limit(LimiteSolucoes, hillClimb([[0,PosInicial]], Solucao, Custo)).
 busca(bestFirst, LimiteSolucoes, PosInicial, Solucao, Custo) :-
