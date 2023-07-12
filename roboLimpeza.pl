@@ -73,11 +73,11 @@ use(sala, 1).
 use(tileSize, "20px").
 
 % escolhe o caractere que representa cada posicao
-tile(entrada, 'E').
-tile(saida, 'S').
-tile(vazio, ' ').
-tile(sujeira, '-').
-tile(obstaculo, '■').
+use(representacaoEntrada, 'E').
+use(representacaoSaida, 'S').
+use(representacaoVazio, ' ').
+use(representacaoSujeira, '-').
+use(representacaoObstaculo, '■').
 
 % ==============================
 % buscas
@@ -425,31 +425,30 @@ montarColunas(NumLinha, NumColuna, [New|Old]) :-
 	NumColuna =< MaxColunas,
 	ProximaColuna is NumColuna+1,
 	montarColunas(NumLinha, ProximaColuna, Old),
-	representacaoTile(IdSala, NumLinha, NumColuna, New).
+	representacaoTile(IdSala, pos(NumColuna, NumLinha), New).
 montarColunas(_, NumColuna, []) :-
 	use(sala, IdSala),
 	tamanhoSala(IdSala, MaxColunas, _),
 	NumColuna > MaxColunas.
 
-%
-representacaoTile(IdSala, X, Y, Repr) :-
-	posicaoEntrada(IdSala, pos(X, Y)),
-	tile(entrada, Repr),
+representacaoTile(IdSala, Pos, Repr) :-
+	posicaoEntrada(IdSala, Pos),
+	use(representacaoEntrada, Repr),
 	!.
-representacaoTile(IdSala, X, Y, Repr) :-
-	posicaoSaida(IdSala, pos(X, Y)),
-	tile(saida, Repr),
+representacaoTile(IdSala, Pos, Repr) :-
+	posicaoSaida(IdSala, Pos),
+	use(representacaoSaida, Repr),
 	!.
-representacaoTile(IdSala, X, Y, Repr) :-
-	sujeira(IdSala, pos(X, Y)),
-	tile(sujeira, Repr),
+representacaoTile(IdSala, Pos, Repr) :-
+	sujeira(IdSala, Pos),
+	use(representacaoSujeira, Repr),
 	!.
-representacaoTile(IdSala, X, Y, Repr) :-
-	obstaculo(IdSala, pos(X, Y)),
-	tile(obstaculo, Repr),
+representacaoTile(IdSala, Pos, Repr) :-
+	obstaculo(IdSala, Pos),
+	use(representacaoObstaculo, Repr),
 	!.
-representacaoTile(_, _, _, Repr) :-
-	tile(vazio, Repr),
+representacaoTile(_, _, Repr) :-
+	use(representacaoVazio, Repr),
 	!.
 
 :- use_module(library(dcg/high_order)).
