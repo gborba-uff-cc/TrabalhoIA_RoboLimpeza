@@ -520,7 +520,33 @@ encontre(Elemento, [_|T], N) :-
 	N is N1+1.
 
 /** <examples>
-?- resolveProblema(Solucao, Custo).
-?- montarSala(Ls).
-?- montarSala(Sala), mostrarSalaHTML(Sala), projection([]).
+% exibe sala na forma matricial
+?-
+montarSala(SalaSuja).
+
+% exibe sala na forma matricial e lista a solucao
+?-
+montarSala(SalaSuja),
+resolveProblema(Solucao, Custo),
+use(distancia, FormulaDistancia).
+
+% lista a solucao
+?-
+resolveProblema(Solucao, Custo),
+use(distancia, FormulaDistancia).
+
+% exibe sala como elemento html
+?-
+montarSala(Sala),
+mostrarSalaHTML(Sala),
+projection([]).
+
+% exibe sala e solucao como elemento html
+?-
+montarSala(SalaSuja),
+mostrarSalaHTML(SalaSuja),
+resolveProblema(Solucao, Custo),
+mostrarSolucaoHTML(Solucao),
+use(distancia, FormulaDistancia),
+projection([Custo, FormulaDistancia]).
 */
