@@ -56,7 +56,7 @@ use(distanciaAvaliacao, manhattan).
 %use(distanciaAvaliacao, euclidiana).
 
 % OPCAO - escolher se o valor da avaliacao acumula ou não
-use(atualizaH, acumula).
+use(atualizaH, acumulativa).
 
 % OPCAO - escolher o algoritmo de concatenacao a ser usado
 use(concatena, builtin).
@@ -238,7 +238,7 @@ estendeH([HAnterior, No|Caminho], NovosCaminhos) :-
 % atualiza o valor da avaliacao quando estendendo o caminho
 % atualizaH(+ Anterior, +Atual, -Novo)
 atualizaH(Anterior, Atual, Novo) :-
-	use(atualizaH, acumula),
+	use(atualizaH, acumulativa),
 	Novo is Anterior + Atual,
 	!.
 atualizaH(_, Atual, Atual) :-
