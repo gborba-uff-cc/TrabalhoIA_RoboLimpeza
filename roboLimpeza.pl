@@ -25,18 +25,6 @@ posicaoEntrada(1, pos(1, 1)).
 % posicaoSaida(+IdSala, +Posicao)
 posicaoSaida(1, pos(4, 4)).
 
-% resolveProblema(-Solucao, -Custo)
-resolveProblema(Solucao, Custo) :-
-	use(sala, IdSala),
-	posicaoEntrada(IdSala, PosEntrada),
-	limparSala(PosEntrada, Solucao, Custo).
-
-% limparSala(+PosInicial, +PosFinal, -Solucao, -Custo)
-limparSala(PosInicial, Solucao, Custo) :-
-	use(busca, B),
-	use(limiteSolucoes, L),
-	busca(B, L, PosInicial, Solucao, Custo).
-
 /*
 ================================================================================
 	CONFIGURACOES
@@ -90,9 +78,18 @@ use(representacaoObstaculo, '■').
 
 /*
 ================================================================================
-	ABSTRACOES BUSCAS
+	PONTO DE ENTRADA
 --------------------------------------------------------------------------------
 */
+% limpa sala resolvendo buscando posicoes com sujeira
+% limpaSala(-Solucao, -Custo)
+limparSala(Solucao, Custo) :-
+	use(sala, IdSala),
+	use(busca, B),
+	use(limiteSolucoes, L),
+	posicaoEntrada(IdSala, PosEntrada),
+	busca(B, L, PosEntrada, Solucao, Custo).
+
 busca(hillClimb, LimiteSolucoes, PosInicial, Solucao, Custo) :-
 	limit(LimiteSolucoes, hillClimb([[0,PosInicial]], Solucao, Custo)).
 busca(bestFirst, LimiteSolucoes, PosInicial, Solucao, Custo) :-
@@ -579,14 +576,14 @@ montarSala(SalaSuja).
 % exibe sala na forma matricial e lista a solucao
 ?-
 montarSala(SalaSuja),
-resolveProblema(Solucao, Custo),
+limparSala(Solucao, Custo),
 use(distanciaCusto, FormulaCusto),
 use(distanciaAvaliacao, FormulaAvaliacao),
 use(busca, AlgoritmoBusca).
 
 % lista a solucao
 ?-
-resolveProblema(Solucao, Custo),
+limparSala(Solucao, Custo),
 use(distanciaCusto, FormulaCusto),
 use(distanciaAvaliacao, FormulaAvaliacao),
 use(busca, AlgoritmoBusca).
@@ -601,7 +598,7 @@ projection([]).
 ?-
 montarSala(SalaSuja),
 mostrarSalaHTML(SalaSuja),
-resolveProblema(Solucao, Custo),
+limparSala(Solucao, Custo),
 mostrarSolucaoHTML(Solucao),
 use(distanciaCusto, FormulaCusto),
 use(distanciaAvaliacao, FormulaAvaliacao),
