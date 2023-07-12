@@ -509,8 +509,18 @@ mostrarSolucaoHTML(Solucao) :-
 		[class(table), style('width:auto; border: solid black;')],
 		[\foreach(between(1, Altura, Y),
 			html(tr([
-				\foreach((between(1, Largura, X), Pos = pos(X, Y), findall(N, encontre(Pos, Solucao, N), NumVisita)),
-					html(td(style(['text-align:center; vertical-align:center; padding:0; border: 1px solid black; margin:0; width: ',TileSize,'; height: ',TileSize,';']), NumVisita))
+				\foreach((between(1, Largura, X), Pos = pos(X, Y), textoCelulaSolucao(IdSala, Solucao, Pos, Texto)),
+					html(td(
+						style([
+							'text-align:center; ',
+							'vertical-align:center; ',
+							'padding:0; ',
+							'border: 1px solid black; ',
+							'margin:0; ',
+							'width: ', TileSize, '; ',
+							'height: ', TileSize, ';']),
+						Texto
+					))
 				)
 			]))
 		)]
@@ -522,6 +532,17 @@ encontre(Elemento, [Elemento|_], 1).
 encontre(Elemento, [_|T], N) :-
 	encontre(Elemento, T, N1),
 	N is N1+1.
+
+% define texto colocado na representacao da solucao na tabela
+% textoCelulaSolucao(+IdSala, +Solucao, +Posicao, -Texto)
+textoCelulaSolucao(IdSala, _, Pos, Texto) :-
+    obstaculo(IdSala, Pos),
+    use(representacaoObstaculo, Texto),
+    !.
+textoCelulaSolucao(_, Solucao, Pos, Texto) :-
+	findall(N, encontre(Pos, Solucao, N), NumVisita),
+    atomics_to_string(NumVisita, ",",Texto),
+    !.
 
 /** <examples>
 % exibe sala na forma matricial
