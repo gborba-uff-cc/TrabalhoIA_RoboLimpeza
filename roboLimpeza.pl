@@ -214,7 +214,7 @@ subconjunto([H1|T1], L2) :-
 estendeF([_, G, _, No|Caminho], NovosCaminhos) :-
 	findall([FNovo, GNovo, HNovo, NovoNo, No|Caminho],
 		(
-			heuristica(No, [No|Caminho], NovoNo, DeltaG, HNovo),
+			heuristica([No|Caminho], NovoNo, DeltaG, HNovo),
 			% calcula custo
 			GNovo is G + DeltaG,
 			% estimativa total
@@ -225,7 +225,7 @@ estendeF([_, G, _, No|Caminho], NovosCaminhos) :-
 estendeG([G, No|Caminho], NovosCaminhos) :-
 	findall([GNovo, NovoNo, No|Caminho],
 		(
-			heuristica(No, [No|Caminho], NovoNo, DeltaG, _),
+			heuristica([No|Caminho], NovoNo, DeltaG, _),
 			% calcula custo
 			GNovo is G + DeltaG
 		),
@@ -234,7 +234,7 @@ estendeG([G, No|Caminho], NovosCaminhos) :-
 estendeH([_, No|Caminho], NovosCaminhos) :-
 	findall([HNovo, NovoNo, No|Caminho],
 		(
-			heuristica(No, [No|Caminho], NovoNo, _, HNovo)
+			heuristica([No|Caminho], NovoNo, _, HNovo)
 		),
 		NovosCaminhos).
 % ----------
@@ -274,21 +274,14 @@ quicksortF([X|Cauda], ListaOrd):-
 maiorF([F1|_], [F2|_]):-
 	F1 > F2.
 */
-
-% ==============================
-%
-% ------------------------------
-% heuristica
-heuristica(PosAtual, Caminho, PosNova, DeltaG, H) :-
-	% passou pela saida 1 vez no máximo
+heuristica([PosAtual|PosPassadas], PosNova, DeltaG, H) :-
 	use(sala, IdSala),
 	posicaoSaida(IdSala, PosSaida),
-	maximoOcorrencias(PosSaida, Caminho, 1),
+	maximoOcorrencias(PosSaida, [PosAtual|PosPassadas], 1),
 	proximoQuadrado(PosAtual, PosNova),
-	% ocorrencias anteriores deve ser no máximo 1
-	maximoOcorrencias(PosNova, Caminho, 1),
+	maximoOcorrencias(PosNova, [PosAtual|PosPassadas], 1),
 	custoDeslocamento(PosAtual, PosNova, DeltaG),
-	avaliaRestante(PosAtual, PosNova, H).
+	estimaRestante([PosAtual|PosPassadas], PosNova, H).
 
 % proximoQuadrado(+PosAtual, +Caminho, -PosNova)
 proximoQuadrado(PosAtual, PosNova) :-
@@ -368,8 +361,7 @@ custoDeslocamento(PosAtual, PosNova, Custo) :-
 	use(distancia, D),
 	distancia(D, PosAtual, PosNova, Custo).
 
-% avaliaRestante(+PosAtual, +PosNova, -Avaliacao) :-
-avaliaRestante(_, PosNova, Avaliacao) :-
+estimaRestante([PosAtual|Caminho], PosNova, Avaliacao) :-
 	use(sala, IdSala),
 	use(distancia, D),
 	posicaoSaida(IdSala, PosSaida),
