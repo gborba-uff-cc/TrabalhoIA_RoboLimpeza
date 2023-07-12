@@ -495,6 +495,30 @@ mostrarSalaHTML(Sala) :-
 		)]
 	)).
 
+% exibe a solucao sobre a matriz da sala no swish.swi-prolog
+% mostrarSolucaoHTML(+Solucao)
+mostrarSolucaoHTML(Solucao) :-
+	use(tileSize, TileSize),
+	use(sala, IdSala),
+	tamanhoSala(IdSala, Largura, Altura),
+	html(table(
+		[class(table), style('width:auto; border: solid black;')],
+		[\foreach(between(1, Altura, Y),
+			html(tr([
+				\foreach((between(1, Largura, X), Pos = pos(X, Y), findall(N, encontre(Pos, Solucao, N), NumVisita)),
+					html(td(style(['text-align:center; vertical-align:center; padding:0; border: 1px solid black; margin:0; width: ',TileSize,'; height: ',TileSize,';']), NumVisita))
+				)
+			]))
+		)]
+	)).
+
+% encontra a posicao de um elemento na lista (logica de membro e soma)
+% encontre(+Elemento, +Lista, -Posicao)
+encontre(Elemento, [Elemento|_], 1).
+encontre(Elemento, [_|T], N) :-
+	encontre(Elemento, T, N1),
+	N is N1+1.
+
 /** <examples>
 ?- resolveProblema(Solucao, Custo).
 ?- montarSala(Ls).
