@@ -410,7 +410,10 @@ distManhattan(pos(Ax, Ay), pos(Bx, By), Dist) :-
 dist45DiagHorVert(pos(Ax, Ay),pos(Bx, By), Dist) :-
 	_dx is abs(Bx-Ax),
 	_dy is abs(By-Ay),
-	Dist is max(_dx, _dy).
+    _diag is min(_dx, _dy),
+    _distReta is max(_dx, _dy) - _diag,
+    _distDiag is sqrt(2*_diag**2),
+	Dist is _distReta + _distDiag.
 
 % distancia em linha reta
 % distanciaEuclidiana(+PosicaoA, +PosicaoB, -Distancia)
