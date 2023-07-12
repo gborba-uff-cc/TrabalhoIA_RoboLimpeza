@@ -1,4 +1,6 @@
 /*
+Aluno: Gabriel da Cunha Borba
+
 ROBÔ DE LIMPEZA
 
 A sala é um tabuleiro com origem no canto superior esquerdo.
