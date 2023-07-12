@@ -493,7 +493,17 @@ mostrarSalaHTML(Sala) :-
 		[\foreach(member(Linha, Sala),
 			html(tr([
 				\foreach(member(Coluna, Linha),
-					html(td(style(['text-align:center; vertical-align:center; padding:0; border: 1px solid black; margin:0; width: ',TileSize,'; height: ',TileSize,';']), Coluna))
+					html(td(
+						style([
+							'text-align:center; ',
+							'vertical-align:center; ',
+							'padding:0; ',
+							'border: 1px solid black; ',
+							'margin:0; ',
+							'width:', TileSize, '; ',
+							'height: ', TileSize, ';']),
+						Coluna
+					))
 				)
 			]))
 		)]
