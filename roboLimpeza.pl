@@ -53,6 +53,9 @@ use(concatena, builtin).
 use(ordena, builtin).
 %use(ordena, customizado).
 
+% permite o movimento do robo para as diagonais
+use(move, diagonais).
+
 % escolher o calculo de distancia a ser usado
 use(distancia, manhattan).
 %use(distancia, diagHorVert).
@@ -300,7 +303,7 @@ posicaoVizinha(pos(X,Y), pos(X, NovoY)) :-
 	NovoY is Y-1.
 % acima direita
 posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
-	use(distancia, diagHorVert),
+	use(move, diagonais),
 	NovoY is Y-1,
 	NovoX is X+1.
 % direita
@@ -308,7 +311,7 @@ posicaoVizinha(pos(X,Y), pos(NovoX, Y)):-
 	NovoX is X+1.
 % abaixo direita
 posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
-	use(distancia, diagHorVert),
+	use(move, diagonais),
 	NovoY is Y+1,
 	NovoX is X+1.
 % abaixo
@@ -316,7 +319,7 @@ posicaoVizinha(pos(X,Y), pos(X, NovoY)) :-
 	NovoY is Y+1.
 % abaixo esquerda
 posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
-	use(distancia, diagHorVert),
+	use(move, diagonais),
 	NovoY is Y+1,
 	NovoX is X-1.
 % esquerda
@@ -324,7 +327,7 @@ posicaoVizinha(pos(X,Y), pos(NovoX, Y)) :-
 	NovoX is X-1.
 % acima esquerda
 posicaoVizinha(pos(X,Y), pos(NovoX, NovoY)) :-
-	use(distancia, diagHorVert),
+	use(move, diagonais),
 	NovoY is Y-1,
 	NovoX is X-1.
 
@@ -362,12 +365,6 @@ custoDeslocamento(PosAtual, PosNova, Custo) :-
 	distancia(D, PosAtual, PosNova, Custo).
 
 % avaliaRestante(+PosAtual, +PosNova, -Avaliacao) :-
-avaliaRestante(_, PosNova, Avaliacao) :-
-	use(sala, IdSala),
-	use(distancia, diagHorVert),
-	!,
-	posicaoSaida(IdSala, PosSaida),
-	distancia(euclidiana, PosNova, PosSaida, Avaliacao).
 avaliaRestante(_, PosNova, Avaliacao) :-
 	use(sala, IdSala),
 	use(distancia, D),
