@@ -175,7 +175,7 @@ concatena/3
 ordenaF/2
 objetivo/1
 */
-aEstrela([[G, _, _, No|Caminho]|_], Solucao, G) :-
+aEstrela([[_, G, _, No|Caminho]|_], Solucao, G) :-
 	objetivo([No|Caminho]),
 	reverse([No|Caminho], Solucao).
 aEstrela([Caminho|Caminhos], Solucao, G) :-
