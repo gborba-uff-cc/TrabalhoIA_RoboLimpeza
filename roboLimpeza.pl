@@ -240,20 +240,26 @@ estendeH([_, No|Caminho], NovosCaminhos) :-
 % ----------
 
 concatena(L1, L2, L3) :-
+	use(concatena, C),
+	concatena(C, L1, L2, L3).
+% concatena usando a funcao interna
+concatena(builtin, L1, L2, L3) :-
 	append(L1, L2, L3).
+% concatena usando a funcao fornecida
+concatena(customizado, [], L, L).
+concatena(customizado, [X|L1],L,[X|L2]) :-
+	concatena(customizado, L1, L, L2).
 
+% abstracao da funcao de ordenacao
 ordena(Original, Ordenado) :-
+	use(ordena, O),
+	ordena(O, Original, Ordenado).
+% ordena usando a funcao interna
+ordena(builtin, Original, Ordenado) :-
+	% sort remove duplicatas (atomos com mesmo endereco de memoria?)
 	sort(Original, Ordenado).
-
-% ----------
-/*
-concatena([], L, L).
-concatena([], L, L) :-
-	use(concatena, customizado).
-	concatena(L1, L, L2).
-
-ordena(Caminhos, CaminhosOrd) :-
-	use(ordena, customizado),
+% ordena usando quicksort
+ordena(customizado, Caminhos, CaminhosOrd) :-
 	quicksortF(Caminhos, CaminhosOrd).
 
 particionarF(_, [], [], []).
