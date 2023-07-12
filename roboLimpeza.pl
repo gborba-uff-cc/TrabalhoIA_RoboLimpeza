@@ -42,47 +42,46 @@ limparSala(PosInicial, Solucao, Custo) :-
 	CONFIGURACOES
 --------------------------------------------------------------------------------
 */
-% permite o movimento do robo para as diagonais
-use(move, diagonais).
-
-% escolhe o limite de solucoes retornados ao procurar a solucao
+% OPCAO - escolhe o limite de solucoes retornados ao procurar a solucao
 use(limiteSolucoes, 1).
 
-% escolhe o algoritmo de busca a ser usado
+% OPCAO - escolher o id da sala para limpar
+use(sala, 1).
+
+% OPCAO - permite o movimento do robo para as diagonais
+use(move, diagonais).
+
+% OPCAO - escolhe o algoritmo de busca a ser usado
 %use(busca, hillClimb).
 %use(busca, bestFirst).
 %use(busca, branchAndBound).
 use(busca, aEstrela).
 
-% escolher o calculo de distancia a ser usado para calcular custo
+% OPCAO - escolher o calculo de distancia a ser usado para calcular custo
 use(distanciaCusto, manhattan).
 %use(distanciaCusto, diagHorVert).
 %use(distanciaCusto, euclidiana).
 
-% escolher o calculo de distancia a ser usado na avaliacao
+% OPCAO - escolher o calculo de distancia a ser usado na avaliacao
 use(distanciaAvaliacao, manhattan).
 %use(distanciaAvaliacao, diagHorVert).
 %use(distanciaAvaliacao, euclidiana).
 
-% escolher se o valor da avaliacao acumula ou não
+% OPCAO - escolher se o valor da avaliacao acumula ou não
 use(atualizaH, acumula).
 
-% escolher o algoritmo de concatenacao a ser usado
+% OPCAO - escolher o algoritmo de concatenacao a ser usado
 use(concatena, builtin).
 %use(concatena, customizado).
 
-% escolher o algoritmo de ordenacao a ser usado
+% OPCAO - escolher o algoritmo de ordenacao a ser usado
 use(ordena, builtin).
 %use(ordena, customizado).
 
-% escolher o id da sala para resolver o problema
-% use(sala, +IdSala)
-use(sala, 1).
-
-% escolhe o tamanho do quadrado que representa uma posicao na sala
+% OPCAO - escolhe o tamanho do quadrado que representa uma posicao na sala
 use(tileSize, "20px").
 
-% escolhe o caractere que representa cada posicao
+% OPCAO - escolhe o caractere que representa cada posicao
 use(representacaoEntrada, 'E').
 use(representacaoSaida, 'S').
 use(representacaoVazio, ' ').
