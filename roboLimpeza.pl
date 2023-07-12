@@ -12,24 +12,61 @@ Os numeros de posicao iniciam em 1, o canto superior esquerdo é pos(1,1)).
 */
 % tamanhoSala(+IdSala, +Largura, +Altura)
 tamanhoSala(1, 5, 5).
+tamanhoSala(2, 5, 5).
+tamanhoSala(3, 5, 5).
+tamanhoSala(4, 8, 8).
 
 % obstaculo(+IdSala, +PosObstaculo)
 % REVIEW - previne "procedure `obstaculo(A,B)' does not exist"
 % REVIEW - pode existir sala sem obstaculo, mas precisa existir fato obstaculo/2
 obstaculo(prevencao, pos(x,y)).
-obstaculo(1, pos(2,2)).
+% --------------------
+obstaculo(2, pos(2,2)).
+% --------------------
+obstaculo(3, pos(2,2)).
+obstaculo(3, pos(2,3)).
+obstaculo(3, pos(2,4)).
+obstaculo(3, pos(3,4)).
+obstaculo(3, pos(3,5)).
+% --------------------
+obstaculo(4, pos(2,6)).
+obstaculo(4, pos(2,6)).
+obstaculo(4, pos(2,7)).
+obstaculo(4, pos(3,7)).
+obstaculo(4, pos(3,8)).
+obstaculo(4, pos(8,7)).
+obstaculo(4, pos(7,7)).
+obstaculo(4, pos(6,7)).
+obstaculo(4, pos(3,2)).
+obstaculo(4, pos(3,3)).
+obstaculo(4, pos(2,3)).
 
 % sujeira(+IdSala, +PosSujeira)
 % REVIEW - previne "procedure `sujeira(A,B)' does not exist"
 % REVIEW - pode existir sala sem sujeira, mas precisa existir fato sujeira/2
 sujeira(prevencao, pos(x,y)).
-sujeira(1, pos(3,3)).
+% --------------------
+sujeira(2, pos(3,3)).
+% --------------------
+sujeira(3, pos(4,5)).
+% --------------------
+sujeira(4, pos(4,4)).
+sujeira(4, pos(2,2)).
+sujeira(4, pos(2,8)).
+sujeira(4, pos(7,2)).
+sujeira(4, pos(8,8)).
 
 %posicaoEntrada(+IdSala, +Posicao)
 posicaoEntrada(1, pos(1, 1)).
+posicaoEntrada(2, pos(1, 1)).
+posicaoEntrada(3, pos(5, 1)).
+posicaoEntrada(4, pos(5, 2)).
 
 % posicaoSaida(+IdSala, +Posicao)
 posicaoSaida(1, pos(5, 5)).
+posicaoSaida(2, pos(5, 5)).
+posicaoSaida(3, pos(1, 5)).
+posicaoSaida(4, pos(1, 8)).
 
 /*
 ================================================================================
