@@ -563,12 +563,14 @@ montarSala(SalaSuja).
 ?-
 montarSala(SalaSuja),
 resolveProblema(Solucao, Custo),
-use(distancia, FormulaDistancia).
+use(distancia, FormulaDistancia),
+use(busca, AlgoritmoBusca).
 
 % lista a solucao
 ?-
 resolveProblema(Solucao, Custo),
-use(distancia, FormulaDistancia).
+use(distancia, FormulaDistancia),
+use(busca, AlgoritmoBusca).
 
 % exibe sala como elemento html
 ?-
@@ -583,5 +585,6 @@ mostrarSalaHTML(SalaSuja),
 resolveProblema(Solucao, Custo),
 mostrarSolucaoHTML(Solucao),
 use(distancia, FormulaDistancia),
-projection([Custo, FormulaDistancia]).
+use(busca, AlgoritmoBusca),
+projection([Custo, FormulaDistancia,AlgoritmoBusca]).
 */
