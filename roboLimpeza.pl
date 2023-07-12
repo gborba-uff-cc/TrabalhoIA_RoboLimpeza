@@ -23,7 +23,7 @@ sujeira(1, pos(3,3)).
 posicaoEntrada(1, pos(1, 1)).
 
 % posicaoSaida(+IdSala, +Posicao)
-posicaoSaida(1, pos(4, 4)).
+posicaoSaida(1, pos(5, 5)).
 
 /*
 ================================================================================
