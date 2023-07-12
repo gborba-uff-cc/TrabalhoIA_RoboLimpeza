@@ -14,9 +14,15 @@ Os numeros de posicao iniciam em 1, o canto superior esquerdo é pos(1,1)).
 tamanhoSala(1, 5, 5).
 
 % obstaculo(+IdSala, +PosObstaculo)
+% REVIEW - previne "procedure `obstaculo(A,B)' does not exist"
+% REVIEW - pode existir sala sem obstaculo, mas precisa existir fato obstaculo/2
+obstaculo(prevencao, pos(x,y)).
 obstaculo(1, pos(2,2)).
 
 % sujeira(+IdSala, +PosSujeira)
+% REVIEW - previne "procedure `sujeira(A,B)' does not exist"
+% REVIEW - pode existir sala sem sujeira, mas precisa existir fato sujeira/2
+sujeira(prevencao, pos(x,y)).
 sujeira(1, pos(3,3)).
 
 %posicaoEntrada(+IdSala, +Posicao)
