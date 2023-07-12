@@ -83,23 +83,23 @@ use(sala, 1).
 use(move, diagonais).
 
 % OPCAO - escolhe o algoritmo de busca a ser usado
-%use(busca, hillClimb).
+use(busca, hillClimb).
 %use(busca, bestFirst).
 %use(busca, branchAndBound).
-use(busca, aEstrela).
+%use(busca, aEstrela).
 
 % OPCAO - escolher o calculo de distancia a ser usado para calcular custo
-use(distanciaCusto, manhattan).
+%use(distanciaCusto, manhattan).
 %use(distanciaCusto, diagHorVert).
-%use(distanciaCusto, euclidiana).
+use(distanciaCusto, euclidiana).
 
 % OPCAO - escolher o calculo de distancia a ser usado na avaliacao
-use(distanciaAvaliacao, manhattan).
+%use(distanciaAvaliacao, manhattan).
 %use(distanciaAvaliacao, diagHorVert).
-%use(distanciaAvaliacao, euclidiana).
+use(distanciaAvaliacao, euclidiana).
 
 % OPCAO - escolher se o valor da avaliacao acumula ou não
-use(atualizaH, acumulativa).
+%use(atualizaH, acumulativa).
 
 % OPCAO - escolher o algoritmo de concatenacao a ser usado
 use(concatena, builtin).
@@ -334,6 +334,7 @@ nPrimeiros(_, [], []) :- !.
 nPrimeiros(N, [H1|T1], [H1|T2]) :-
     N1 is N-1,
     nPrimeiros(N1, T1, T2).
+
 /*
 ================================================================================
 	HEURISTICAS
