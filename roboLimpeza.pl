@@ -5,6 +5,12 @@ ROBÔ DE LIMPEZA
 
 A sala é um tabuleiro com origem no canto superior esquerdo.
 Os numeros de posicao iniciam em 1, o canto superior esquerdo é pos(1,1)).
+
+Exemplos para a execucao estão no fim do arquivo. (No swish.swi-prolog eh
+possivel selecionar os exemplos no menu "Examples" abaixo da caixa de texto no
+canto inferior direito).
+
+Eh possivel configurar alguns aspectos da execucao com fatos 'use' mais abaixo.
 */
 
 /*
