@@ -85,7 +85,7 @@ posicaoSaida(4, pos(1, 8)).
 use(limiteSolucoes, 1).
 
 % OPCAO - escolher o id da sala para limpar
-use(sala, 1).
+use(sala, 2).
 
 % OPCAO - permite o movimento do robo para as diagonais
 use(move, diagonais).
@@ -98,8 +98,8 @@ use(busca, hillClimb).
 
 % OPCAO - escolher o calculo de distancia a ser usado para calcular custo
 %use(distanciaCusto, manhattan).
-%use(distanciaCusto, diagHorVert).
-use(distanciaCusto, euclidiana).
+use(distanciaCusto, diagHorVert).
+%use(distanciaCusto, euclidiana).
 
 % OPCAO - escolher o calculo de distancia a ser usado na avaliacao
 %use(distanciaAvaliacao, manhattan).
@@ -646,6 +646,17 @@ use(distanciaCusto, FormulaCusto),
 use(distanciaAvaliacao, FormulaAvaliacao),
 use(busca, AlgoritmoBusca).
 
+% lista a solucao e mede tempo de execucao
+?-
+get_time(_tInicio),
+limparSala(Solucao, Custo),
+get_time(_tFim),
+DeltaT is _tFim - _tInicio,
+format_time(atom(TempoExecucao), '', DeltaT),
+use(distanciaCusto, FormulaCusto),
+use(distanciaAvaliacao, FormulaAvaliacao),
+use(busca, AlgoritmoBusca).
+
 % exibe sala como elemento html
 ?-
 montarSala(Sala),
@@ -662,4 +673,20 @@ use(distanciaCusto, FormulaCusto),
 use(distanciaAvaliacao, FormulaAvaliacao),
 use(busca, AlgoritmoBusca),
 projection([Custo, FormulaCusto, FormulaAvaliacao, AlgoritmoBusca]).
+
+% exibe sala e solucao como elemento html mais o
+?-
+montarSala(SalaSuja),
+mostrarSalaHTML(SalaSuja),
+get_time(_tInicio),
+limparSala(Solucao, Custo),
+get_time(_tFim),
+DeltaT is _tFim - _tInicio,
+format_time(atom(T), '', DeltaT),
+mostrarSolucaoHTML(Solucao),
+use(distanciaCusto, FormulaCusto),
+use(distanciaAvaliacao, FormulaAvaliacao),
+use(busca, AlgoritmoBusca),
+projection([Custo, FormulaCusto, FormulaAvaliacao, AlgoritmoBusca]).
+
 */
