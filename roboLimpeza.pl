@@ -85,7 +85,7 @@ posicaoSaida(4, pos(1, 8)).
 use(limiteSolucoes, 1).
 
 % OPCAO - escolher o id da sala para limpar
-use(sala, 2).
+use(sala, 3).
 
 % OPCAO - permite o movimento do robo para as diagonais
 use(move, diagonais).
